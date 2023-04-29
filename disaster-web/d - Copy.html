@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disaster Management</title>
+  <style>
+     * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('world-map.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    header {
+      background-color: #2b2d42;
+      color: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
+    }
+
+    .logo a {
+      color: #fff;
+      font-size: 24px;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin-left: 20px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .banner {
+      background-color: #2b2d42;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .banner h1 {
+      color: #fff;
+      font-size: 48px;
+      text-align: center;
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .content h2 {
+      margin-top: 0;
+    }
+
+    .content ul {
+      margin: 0;
+      padding: 0;
+      list-style: disc;
+      margin-left: 20px;
+    }
+
+    .footer {
+      background-color: #333;
+      color: #8e1919;
+      padding: 10px;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+      }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="logo">
+      <a href="index.html">Disaster Management</a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Donate</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5hQXharvwVR9PfaVRnwHF6XWJAv3YAW4&libraries=places"></script>
+    <script>
+      function initMap() {
+        // create a new map centered on the user's current location
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15
+        });
+        
+        // get the user's current location using the Geolocation API
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            
+            // search for the nearest hospital using the Places API
+            var request = {
+              location: userLocation,
+              radius: '5000',
+              type: ['hospital']
+            };
+            var service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, function(results, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // redirect the user to the Google Maps directions page for the nearest hospital
+                window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(results[0].vicinity);
+              }
+            });
+            
+            // center the map on the user's location
+            map.setCenter(userLocation);
+          });
+        }
+      }
+    </script>
+  
+  </header>
+  
+  <section class="banner">
+    <h1>Disaster Management</h1>
+  </section>
+  <section class="content">
+    <!-- Content goes here -->
+    <p>Click <a href="https://www.google.com/maps/dir/?api=1&destination=33.6844,-117.8265">here</a> to get to nearest hosspital</p>
+  </section>
+
+  <section class="content">
+    <h2>About Us</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pretium nunc a risus suscipit, vitae molestie purus accumsan. Praesent bibendum, erat a lacinia faucibus, magna nibh laoreet magna, vel finibus mi eros eu magna.</p>
+    <h2>Our Services</h2>
+    <ul>
+      <li>Emergency response planning</li>
+      <li>Disaster relief operations</li>
+      <li>Victim assistance and support</li>
+      <li>Community outreach and education</li>
+    </ul>
+    <img src="https://www.shutterstock.com/image-vector/world-map-600w-735333076.jpg" alt="Image description">
+  </section>
+  <h1>Nearby Hospitals Finder</h1>
+    <button id="emergency">Emergency</button>
+    <div id="map"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script>
+      $(document).ready(function() {
+        var map;
+        var service;
+        var infowindow;
+        var currentLocation;
+
+        function initMap() {
+          map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 15
+          });
+          infowindow = new google.maps.InfoWindow();
+          service = new google.maps.places.PlacesService(map);
+          getLocation();
+        }
+
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              map.setCenter(currentLocation);
+              var marker = new google.maps.Marker({
+                position: currentLocation,
+                map: map
+              });
+              infowindow.setContent('Your current location');
+              infowindow.open(map, marker);
+            }, function() {
+              alert('Error getting location');
+            });
+          } else {
+            alert('Geolocation is not supported by this browser.');
+          }
+        }
+
+        function findNearestHospitals() {
+          if (currentLocation) {
+            var request = {
+              location: currentLocation,
+              radius: '5000',
+              type: ['hospital']
+            };
+            service.nearbySearch(request, callback);
+          } else {
+            alert('Error: Current location not found.');
+          }
+        }
+
+        function callback(results, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            clearMarkers();
+            for (var i = 0; i < results.length; i++) {
+              createMarker(results[i]);
+            }
+          }
+        }
+
+        var markers = [];
+
+        function createMarker(place) {
+          var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+          });
+          markers.push(marker);
+
+          google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+              place.vicinity + '</div>');
+            infowindow.open(map, this);
+          });
+        }
+
+        function clearMarkers() {
+          for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+          }
+          markers = [];
+        }
+
+        $('#emergency').on('click', function() {
+          // Send distress signal to server
+          sendDistressSignal();
+
+          // Find nearest hospitals
+          findNearestHospitals();
+        });
+
+        // Send distress signal to server
+        function sendDistressSignal() {
+          if (currentLocation) {
+            var latitude = currentLocation.lat();
+            var longitude = currentLocation.lng();
+
+            // Generate distress message
+            var message = "HELP! I am"
+
+        }
+                // Send distress message to family members
+                $.ajax({
+          url: 'send_distress.php',
+          type: 'POST',
+          data: {message: message},
+          success: function(response) {
+            console.log(response);
+          },
+          error: function(xhr, status, error) {
+            console.log('Error sending distress signal: ' + error);
+          }
+        });
+       else {
+        alert('Error: Current location not found.');
+      }
+    }
+
+    initMap();
+    
+
+   });
+
+
+    
+    </script>
+
+  <main>
+    <!-- main content of the page -->
+    
+</main>
+
+  <footer>
+    <p>&copy; 2023 Disaster Management. All rights reserved.</p>
+  </footer>
+</body>
+</html>
